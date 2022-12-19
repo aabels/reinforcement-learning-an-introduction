@@ -167,6 +167,7 @@ class Judger:
             self.p1.set_state(current_state)
             self.p2.set_state(current_state)
             if print_state:
+                #print("game array is :", current_state.data , "\n")
                 current_state.print_state()
             if is_end:
                 return current_state.winner
@@ -220,18 +221,18 @@ class Player:
 
     # choose an action based on the state
     def act(self):
-        state = self.states[-1]
+        state = self.states[-1] # get last element in the seq.
         next_states = []
         next_positions = []
         for i in range(BOARD_ROWS):
             for j in range(BOARD_COLS):
-                if state.data[i, j] == 0:
-                    next_positions.append([i, j])
-                    next_states.append(state.next_state(
-                        i, j, self.symbol).hash())
+                if state.data[i, j] == 0: #                 find a open spot
+                    next_positions.append([i, j]) #         save the next move
+                    next_states.append(state.next_state( #  save the new state as a hash
+                        i, j, self.symbol).hash())   #      next_states & next_positions have same index
 
-        if np.random.rand() < self.epsilon:
-            action = next_positions[np.random.randint(len(next_positions))]
+        if np.random.rand() < self.epsilon: # GREEDY action taken instead
+            action = next_positions[np.random.randint(len(next_positions))] # find a rand move from next spots
             action.append(self.symbol)
             self.greedy[-1] = False
             return action
@@ -291,7 +292,7 @@ def train(epochs, print_every_n=500):
     player1_win = 0.0
     player2_win = 0.0
     for i in range(1, epochs + 1):
-        winner = judger.play(print_state=False)
+        winner = judger.play(print_state=True)
         if winner == 1:
             player1_win += 1
         if winner == -1:
@@ -341,6 +342,9 @@ def play():
 
 
 if __name__ == '__main__':
-    train(int(1e5)) #1e5 = 100,000
-    compete(int(1e3))
-    play()
+
+    train(int(1))
+
+    #train(int(1e5)) #1e5 = 100,000
+    #compete(int(1e3))
+    #play()
