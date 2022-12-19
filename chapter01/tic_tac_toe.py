@@ -341,6 +341,6 @@ def play():
 
 
 if __name__ == '__main__':
-    train(int(1e5))
+    train(int(1e5)) #1e5 = 100,000
     compete(int(1e3))
     play()
